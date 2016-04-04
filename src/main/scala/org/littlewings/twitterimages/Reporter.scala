@@ -3,8 +3,8 @@ package org.littlewings.twitterimages
 object Reporter {
   def defaultFormat(reporter: Reporter): String =
     s"""|executed infomations.
-        |  scaned total page = ${reporter.page}
-        |  scaned total tweet count = ${reporter.tweetCount}
+        |  scanned total page = ${reporter.page}
+        |  scanned total tweet count = ${reporter.tweetCount}
         |  collected total image count = ${reporter.imageCount}""".stripMargin
 }
 
