@@ -3,17 +3,21 @@ package org.littlewings.twitterimages
 object Reporter {
   def defaultFormat(reporter: Reporter): String =
     s"""|executed infomations.
-        |  collected total page = ${reporter.page}
+        |  scaned total page = ${reporter.page}
+        |  scaned total tweet count = ${reporter.tweetCount}
         |  collected total image count = ${reporter.imageCount}""".stripMargin
 }
 
 trait Reporter {
   protected var page: Int = _
+  protected var tweetCount: Int = _
   protected var imageCount: Int = _
 
   def currentPage(page: Int): Unit = this.page = page
 
-  def addImageCount(imageCount: Int): Unit = this.imageCount += imageCount
+  def incrementTweet(): Unit = tweetCount += 1
+
+  def incrementImage(): Unit = imageCount += 1
 
   def show(): Unit
 }

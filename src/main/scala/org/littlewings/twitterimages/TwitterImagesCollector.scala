@@ -63,6 +63,8 @@ object TwitterImagesCollector {
         logger.info(s"page[${currentPage - 1}] size = ${responseList.size}")
 
         responseList.asScala.foreach { status =>
+          reporter.incrementTweet()
+
           val time = formatter.format(status.getCreatedAt)
           val mediaEntries = status.getMediaEntities
 
@@ -85,7 +87,7 @@ object TwitterImagesCollector {
                 }
               }
 
-              reporter.addImageCount(1)
+              reporter.incrementImage()
             } catch {
               case e: IOException => logger.error("download fail, reason = {}", Array(e.getMessage, e))
             }

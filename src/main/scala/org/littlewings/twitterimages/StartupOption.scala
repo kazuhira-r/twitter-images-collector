@@ -10,6 +10,8 @@ case class StartupOption(outputDir: String = ".",
                          limit: Int = 200)
 
 object StartupOption {
+  val SELECTABLE_IMAGE_TYPES = Set("small", "thumb", "medium", "large")
+
   def newParser[T](fromClass: Class[T]): OptionParser[StartupOption] = {
     new OptionParser[StartupOption](fromClass.getSimpleName) {
       opt[String]('o', "output-dir") valueName ("<output-dir>") action { (x, o) =>
@@ -22,7 +24,7 @@ object StartupOption {
 
       opt[String]('t', "image-type") valueName ("<image-type>") action { (x, o) =>
         o.copy(imageType = x)
-      } text ("download image type [default large, choise [small, thumb, medium, large]]")
+      } text (s"downloadable image type [default large, choise [${SELECTABLE_IMAGE_TYPES.mkString(", ")}]]")
 
       opt[Int]('s', "paging-start") valueName ("<paging-start>") action { (x, o) =>
         o.copy(pagingStart = x)
@@ -38,6 +40,9 @@ object StartupOption {
 
       checkConfig { o =>
         if (o.pagingEnd > 0 && o.pagingStart > o.pagingEnd) failure("invalid spec paging, start > end")
+        else success
+
+        if (!SELECTABLE_IMAGE_TYPES.contains(o.imageType)) failure(s"image-type, must in ${SELECTABLE_IMAGE_TYPES.mkString("[", ", ", "]")}")
         else success
       }
     }
