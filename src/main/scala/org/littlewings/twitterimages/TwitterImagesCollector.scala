@@ -40,9 +40,11 @@ object TwitterImagesCollector {
     logger.info("  output-path-pattern = {}",
       Array(outputBaseDir, "[screen-name]", "[image-type]", "[yyyyMMddHHmmss_image-filename]").mkString("/"))
 
-    val reporter = new ConsoleReporter
     val directoryBuilder = FilePathBuilder(Array(outputBaseDir, screenName, imageType))
     val outputDirectory = directoryBuilder.build
+
+    val reporter = new ConsoleReporter
+    reporter.imagesOutputDirectory(outputDirectory)
 
     Files.createDirectories(Paths.get(outputDirectory))
 
