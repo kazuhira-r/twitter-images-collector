@@ -40,8 +40,7 @@ object TwitterImagesCollector {
     logger.info("  output-path-pattern = {}",
       Array(outputBaseDir, "[screen-name]", "[image-type]", "[yyyyMMddHHmmss]_[id]_[image-filename]").mkString(File.separator))
 
-    val directoryBuilder = FilePathBuilder(Array(outputBaseDir, screenName, imageType))
-    val outputDirectory = directoryBuilder.build
+    val outputDirectory = Array(outputBaseDir, screenName, imageType).mkString(File.separator)
 
     val reporter = new ConsoleReporter
     reporter.imagesOutputDirectory(outputDirectory)
@@ -77,7 +76,7 @@ object TwitterImagesCollector {
             try {
               httpClient.getInputStream(mediaUrl) { is =>
                 val fileName = UrlExtractor.fileNameExcludeType(mediaUrl)
-                val filePath = FilePathBuilder(Array(outputDirectory, s"${time}_${id}_${fileName}")).build
+                val filePath = Array(outputDirectory, s"${time}_${id}_${fileName}").mkString(File.separator)
 
                 val bis = new BufferedInputStream(is)
                 val bos = new BufferedOutputStream(Files.newOutputStream(Paths.get(filePath)))
