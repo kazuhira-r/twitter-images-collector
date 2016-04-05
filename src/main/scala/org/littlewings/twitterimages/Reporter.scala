@@ -27,5 +27,5 @@ trait Reporter {
 }
 
 class ConsoleReporter extends Reporter {
-  def show(): Unit = System.out.println(Reporter.defaultFormat(this))
+  def show(): Unit = println(Reporter.defaultFormat(this))
 }
