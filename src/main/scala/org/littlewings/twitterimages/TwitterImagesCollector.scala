@@ -38,7 +38,7 @@ object TwitterImagesCollector {
     logger.info("  paging-end = {}", if (pagingEnd < 1) "unlimitted" else pagingEnd)
     logger.info("  limit = {}", limit)
     logger.info("  output-path-pattern = {}",
-      Array(outputBaseDir, "[screen-name]", "[image-type]", "[yyyyMMddHHmmss_image-filename]").mkString("/"))
+      Array(outputBaseDir, "[screen-name]", "[image-type]", "[yyyyMMddHHmmss_id_image-filename]").mkString("/"))
 
     val directoryBuilder = FilePathBuilder(Array(outputBaseDir, screenName, imageType))
     val outputDirectory = directoryBuilder.build
@@ -67,6 +67,7 @@ object TwitterImagesCollector {
         responseList.asScala.foreach { status =>
           reporter.incrementTweet()
 
+          val id = status.getId
           val time = formatter.format(status.getCreatedAt)
           val mediaEntries = status.getMediaEntities
 
@@ -76,7 +77,7 @@ object TwitterImagesCollector {
             try {
               httpClient.getInputStream(mediaUrl) { is =>
                 val fileName = UrlExtractor.fileNameExcludeType(mediaUrl)
-                val filePath = FilePathBuilder(Array(outputDirectory, s"${time}_${fileName}")).build
+                val filePath = FilePathBuilder(Array(outputDirectory, s"${time}_${id}_${fileName}")).build
 
                 val bis = new BufferedInputStream(is)
                 val bos = new BufferedOutputStream(Files.newOutputStream(Paths.get(filePath)))
