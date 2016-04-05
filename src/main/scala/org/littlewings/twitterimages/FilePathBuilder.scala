@@ -1,5 +1,7 @@
 package org.littlewings.twitterimages
 
+import java.io.File
+
 import scala.collection.mutable.ArrayBuffer
 
 object FilePathBuilder {
@@ -22,7 +24,7 @@ class FilePathBuilder(paths: Seq[String]) {
 
   def copy: FilePathBuilder = new FilePathBuilder(builder.clone)
 
-  def build: String = build("/")
+  def build: String = build(File.separator)
 
   def build(delimiter: String): String =
     builder.mkString(delimiter)

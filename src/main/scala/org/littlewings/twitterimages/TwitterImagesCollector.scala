@@ -1,6 +1,6 @@
 package org.littlewings.twitterimages
 
-import java.io.{BufferedInputStream, BufferedOutputStream, IOException}
+import java.io.{BufferedInputStream, BufferedOutputStream, File, IOException}
 import java.nio.file.{Files, Paths}
 import java.text.SimpleDateFormat
 
@@ -38,7 +38,7 @@ object TwitterImagesCollector {
     logger.info("  paging-end = {}", if (pagingEnd < 1) "unlimitted" else pagingEnd)
     logger.info("  limit = {}", limit)
     logger.info("  output-path-pattern = {}",
-      Array(outputBaseDir, "[screen-name]", "[image-type]", "[yyyyMMddHHmmss]_[id]_[image-filename]").mkString("/"))
+      Array(outputBaseDir, "[screen-name]", "[image-type]", "[yyyyMMddHHmmss]_[id]_[image-filename]").mkString(File.separator))
 
     val directoryBuilder = FilePathBuilder(Array(outputBaseDir, screenName, imageType))
     val outputDirectory = directoryBuilder.build
