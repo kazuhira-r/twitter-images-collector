@@ -25,7 +25,7 @@ class TwitterImagesCollector(option: StartupOption, outputDirectory: String, rep
     val httpClient = new HttpClient
 
     val handler =
-      handleStatus(_: Status, httpClient: HttpClient, formatter: DateFormat, () => currentPage += 1)
+      handleStatus(_: Status, httpClient: HttpClient, formatter: DateFormat)
 
     Iterator
       .continually {
@@ -41,10 +41,12 @@ class TwitterImagesCollector(option: StartupOption, outputDirectory: String, rep
         logger.info(s"page[${currentPage}] size = ${responseList.size}")
 
         responseList.asScala.foreach(handler)
+
+        currentPage += 1
       }
   }
 
-  protected def handleStatus(status: Status, httpClient: HttpClient, formatter: DateFormat, action: () => Unit): Unit = {
+  protected def handleStatus(status: Status, httpClient: HttpClient, formatter: DateFormat): Unit = {
     reporter.incrementTweet()
 
     val imageType = option.imageType
@@ -76,7 +78,5 @@ class TwitterImagesCollector(option: StartupOption, outputDirectory: String, rep
         case e: IOException => logger.error("download fail, reason = {}", Array(e.getMessage, e))
       }
     }
-
-    action()
   }
 }
