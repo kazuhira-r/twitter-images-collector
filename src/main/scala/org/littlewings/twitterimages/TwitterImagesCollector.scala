@@ -35,7 +35,7 @@ object TwitterImagesCollector {
     logger.info("  image-type = {}", imageType)
     logger.info("  output-dir = {}", outputBaseDir)
     logger.info("  paging-start = {}", currentPage)
-    logger.info("  paging-end = {}", pagingEnd)
+    logger.info("  paging-end = {}", if (pagingEnd < 1) "unlimitted" else pagingEnd)
     logger.info("  limit = {}", limit)
     logger.info("  output-path-pattern = {}",
       Array(outputBaseDir, "[screen-name]", "[image-type]", "[yyyyMMddHHmmss_image-filename]").mkString("/"))

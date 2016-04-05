@@ -32,7 +32,7 @@ object StartupOption {
 
       opt[Int]('e', "paging-end") valueName ("<paging-end>") action { (x, o) =>
         o.copy(pagingEnd = x)
-      } text ("paging end [default -1(unlimitted)")
+      } text ("paging end [default -1(unlimitted)]")
 
       opt[Int]('l', "limit") valueName ("<limit>") action { (x, o) =>
         o.copy(limit = x)
@@ -41,7 +41,15 @@ object StartupOption {
       checkConfig { o =>
         if (o.pagingEnd > 0 && o.pagingStart > o.pagingEnd) failure("invalid spec paging, start > end")
         else success
+      }
 
+      checkConfig { o =>
+        if (o.limit > 0 && o.limit <= 200) success
+        else if (o.limit < 0) success
+        else failure("limit is 0 < limit <= 200 or limit <= -1(unlimitted)")
+      }
+
+      checkConfig { o =>
         if (!SELECTABLE_IMAGE_TYPES.contains(o.imageType)) failure(s"image-type, must in ${SELECTABLE_IMAGE_TYPES.mkString("[", ", ", "]")}")
         else success
       }
