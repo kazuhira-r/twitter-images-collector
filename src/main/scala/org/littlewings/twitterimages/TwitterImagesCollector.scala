@@ -27,17 +27,16 @@ class TwitterImagesCollector(option: StartupOption) {
 
     Iterator
       .continually {
-        reporter.currentPage(currentPage)
         val paging = new Paging(currentPage, limit)
-        currentPage += 1
         twitter.getUserTimeline(screenName, paging)
       }
       .takeWhile { reponseList =>
-        if (pagingEnd < 0) !reponseList.isEmpty else (currentPage - 1) <= pagingEnd
+        if (pagingEnd < 0) !reponseList.isEmpty else (currentPage) <= pagingEnd
       }
       .foreach { responseList =>
+        reporter.currentPage(currentPage)
 
-        logger.info(s"page[${currentPage - 1}] size = ${responseList.size}")
+        logger.info(s"page[${currentPage}] size = ${responseList.size}")
 
         responseList.asScala.foreach { status =>
           reporter.incrementTweet()
@@ -71,8 +70,8 @@ class TwitterImagesCollector(option: StartupOption) {
             }
           }
         }
-      }
 
-    reporter.show()
+        currentPage += 1
+      }
   }
 }
