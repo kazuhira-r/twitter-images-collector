@@ -11,7 +11,7 @@ updateOptions := updateOptions.value.withCachedResolution(true)
 scalacOptions ++= Seq("-Xlint", "-deprecation", "-unchecked", "-feature", "-Xexperimental")
 
 assemblyJarName in assembly := "twitter-images-collector.jar"
-mainClass in assembly := Some("org.littlewings.twitterimages.TwitterImagesCollector")
+mainClass in assembly := Some("org.littlewings.twitterimages.Bootstrap")
 
 libraryDependencies ++= Seq(
   "org.twitter4j" % "twitter4j-core" % "4.0.4",

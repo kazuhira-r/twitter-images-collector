@@ -12,8 +12,8 @@ case class StartupOption(outputDir: String = ".",
 object StartupOption {
   val SELECTABLE_IMAGE_TYPES = Set("small", "thumb", "medium", "large")
 
-  def newParser[T](fromClass: Class[T]): OptionParser[StartupOption] = {
-    new OptionParser[StartupOption](fromClass.getSimpleName) {
+  def newParser[T](applicationName: String): OptionParser[StartupOption] = {
+    new OptionParser[StartupOption](applicationName) {
       opt[String]('o', "output-dir") valueName ("<output-dir>") action { (x, o) =>
         o.copy(outputDir = x)
       } text ("images ouptput directory [default .(current directory)]")

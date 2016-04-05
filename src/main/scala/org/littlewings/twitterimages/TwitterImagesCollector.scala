@@ -9,14 +9,8 @@ import twitter4j.{Paging, TwitterFactory}
 
 import scala.collection.JavaConverters._
 
-object TwitterImagesCollector {
-  def main(args: Array[String]): Unit = {
-    val parser = StartupOption.newParser(getClass)
-    val option =
-      parser
-        .parse(args, StartupOption())
-        .getOrElse(sys.exit(1))
-
+class TwitterImagesCollector(option: StartupOption) {
+  def collect(outputDirectory: String, reporter: Reporter): Unit = {
     val logger = LoggerFactory.getLogger(getClass)
 
     val twitter = TwitterFactory.getSingleton
@@ -28,24 +22,6 @@ object TwitterImagesCollector {
     val limit = option.limit
     val imageType = option.imageType
     val formatter = new SimpleDateFormat("yyyyMMddHHmmss")
-
-    logger.info(s"${getClass.getSimpleName} startup.")
-    logger.info("execution infomations.")
-    logger.info("  screen-name = {}", screenName)
-    logger.info("  image-type = {}", imageType)
-    logger.info("  output-dir = {}", outputBaseDir)
-    logger.info("  paging-start = {}", currentPage)
-    logger.info("  paging-end = {}", if (pagingEnd < 1) "unlimitted" else pagingEnd)
-    logger.info("  limit = {}", limit)
-    logger.info("  output-path-pattern = {}",
-      Array(outputBaseDir, "[screen-name]", "[image-type]", "[yyyyMMddHHmmss]_[id]_[image-filename]").mkString(File.separator))
-
-    val outputDirectory = Array(outputBaseDir, screenName, imageType).mkString(File.separator)
-
-    val reporter = new ConsoleReporter
-    reporter.imagesOutputDirectory(outputDirectory)
-
-    Files.createDirectories(Paths.get(outputDirectory))
 
     val httpClient = new HttpClient
 
