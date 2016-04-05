@@ -36,7 +36,8 @@ object Bootstrap {
           |  paging-start = ${currentPage}
           |  paging-end = ${if (pagingEnd < 1) "unlimitted" else pagingEnd}
           |  limit = ${limit}
-          |  output-path-pattern = ${Array(outputBaseDir, "[screen-name]", "[image-type]", "[yyyyMMddHHmmss]_[id]_[image-filename]").mkString(File.separator)}""".stripMargin
+          |  output-path-pattern = ${Array(outputBaseDir, "[screen-name]", "[image-type]", "[yyyyMMddHHmmss]_[id]_[image-filename]").mkString(File.separator)}
+          |""".stripMargin
     }
 
     val outputDirectory = Array(outputBaseDir, screenName, imageType).mkString(File.separator)
@@ -46,8 +47,8 @@ object Bootstrap {
 
     Files.createDirectories(Paths.get(outputDirectory))
 
-    val collector = new TwitterImagesCollector(option)
-    collector.collect(outputDirectory, reporter)
+    val collector = new TwitterImagesCollector(option, outputDirectory, reporter)
+    collector.collect()
 
     reporter.show()
   }

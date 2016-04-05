@@ -2,17 +2,17 @@ package org.littlewings.twitterimages
 
 import java.io.{BufferedInputStream, BufferedOutputStream, File, IOException}
 import java.nio.file.{Files, Paths}
-import java.text.SimpleDateFormat
+import java.text.{DateFormat, SimpleDateFormat}
 
 import org.slf4j.LoggerFactory
-import twitter4j.{Paging, TwitterFactory}
+import twitter4j.{Paging, Status, TwitterFactory}
 
 import scala.collection.JavaConverters._
 
-class TwitterImagesCollector(option: StartupOption) {
-  def collect(outputDirectory: String, reporter: Reporter): Unit = {
-    val logger = LoggerFactory.getLogger(getClass)
+class TwitterImagesCollector(option: StartupOption, outputDirectory: String, reporter: Reporter) {
+  val logger = LoggerFactory.getLogger(getClass)
 
+  def collect(): Unit = {
     val twitter = TwitterFactory.getSingleton
 
     val outputBaseDir = option.outputDir
@@ -20,10 +20,12 @@ class TwitterImagesCollector(option: StartupOption) {
     var currentPage = option.pagingStart
     val pagingEnd = option.pagingEnd
     val limit = option.limit
-    val imageType = option.imageType
     val formatter = new SimpleDateFormat("yyyyMMddHHmmss")
 
     val httpClient = new HttpClient
+
+    val handler =
+      handleStatus(_: Status, httpClient: HttpClient, formatter: DateFormat, () => currentPage += 1)
 
     Iterator
       .continually {
@@ -38,40 +40,43 @@ class TwitterImagesCollector(option: StartupOption) {
 
         logger.info(s"page[${currentPage}] size = ${responseList.size}")
 
-        responseList.asScala.foreach { status =>
-          reporter.incrementTweet()
+        responseList.asScala.foreach(handler)
+      }
+  }
 
-          val id = status.getId
-          val time = formatter.format(status.getCreatedAt)
-          val mediaEntries = status.getMediaEntities
+  protected def handleStatus(status: Status, httpClient: HttpClient, formatter: DateFormat, action: () => Unit): Unit = {
+    reporter.incrementTweet()
 
-          mediaEntries.foreach { mediaEntry =>
-            val mediaUrl = s"${mediaEntry.getMediaURL}:${imageType}"
+    val imageType = option.imageType
+    val id = status.getId
+    val time = formatter.format(status.getCreatedAt)
+    val mediaEntries = status.getMediaEntities
 
-            try {
-              httpClient.getInputStream(mediaUrl) { is =>
-                val fileName = UrlExtractor.fileNameExcludeType(mediaUrl)
-                val filePath = Array(outputDirectory, s"${time}_${id}_${fileName}").mkString(File.separator)
+    mediaEntries.foreach { mediaEntry =>
+      val mediaUrl = s"${mediaEntry.getMediaURL}:${imageType}"
 
-                val bis = new BufferedInputStream(is)
-                val bos = new BufferedOutputStream(Files.newOutputStream(Paths.get(filePath)))
+      try {
+        httpClient.getInputStream(mediaUrl) { is =>
+          val fileName = UrlExtractor.fileNameExcludeType(mediaUrl)
+          val filePath = Array(outputDirectory, s"${time}_${id}_${fileName}").mkString(File.separator)
 
-                try {
-                  Iterator.continually(bis.read()).takeWhile(_ > -1).foreach(bos.write)
-                } finally {
-                  bis.close()
-                  bos.close()
-                }
-              }
+          val bis = new BufferedInputStream(is)
+          val bos = new BufferedOutputStream(Files.newOutputStream(Paths.get(filePath)))
 
-              reporter.incrementImage()
-            } catch {
-              case e: IOException => logger.error("download fail, reason = {}", Array(e.getMessage, e))
-            }
+          try {
+            Iterator.continually(bis.read()).takeWhile(_ > -1).foreach(bos.write)
+          } finally {
+            bis.close()
+            bos.close()
           }
         }
 
-        currentPage += 1
+        reporter.incrementImage()
+      } catch {
+        case e: IOException => logger.error("download fail, reason = {}", Array(e.getMessage, e))
       }
+    }
+
+    action()
   }
 }
