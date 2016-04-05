@@ -25,7 +25,7 @@ class TwitterImagesCollector(option: StartupOption, outputDirectory: String, rep
     val httpClient = new HttpClient
 
     val handler =
-      handleStatus(_: Status, httpClient: HttpClient, formatter: DateFormat)
+      handleStatus(httpClient, formatter) _
 
     Iterator
       .continually {
@@ -37,6 +37,7 @@ class TwitterImagesCollector(option: StartupOption, outputDirectory: String, rep
       }
       .foreach { responseList =>
         reporter.currentPage(currentPage)
+        reporter.incrementTweet()
 
         logger.info(s"page[${currentPage}] size = ${responseList.size}")
 
@@ -46,9 +47,7 @@ class TwitterImagesCollector(option: StartupOption, outputDirectory: String, rep
       }
   }
 
-  protected def handleStatus(status: Status, httpClient: HttpClient, formatter: DateFormat): Unit = {
-    reporter.incrementTweet()
-
+  protected def handleStatus(httpClient: HttpClient, formatter: DateFormat)(status: Status): Unit = {
     val imageType = option.imageType
     val id = status.getId
     val time = formatter.format(status.getCreatedAt)
