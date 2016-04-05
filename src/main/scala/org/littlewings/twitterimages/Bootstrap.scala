@@ -4,10 +4,6 @@ import java.io.File
 import java.nio.file.{Files, Paths}
 import java.text.SimpleDateFormat
 
-import org.slf4j.LoggerFactory
-
-class Bootstrap
-
 object Bootstrap {
   def main(args: Array[String]): Unit = {
     val parser = StartupOption.newParser("twitter-images-collector")
@@ -15,8 +11,6 @@ object Bootstrap {
       parser
         .parse(args, StartupOption())
         .getOrElse(sys.exit(1))
-
-    val logger = LoggerFactory.getLogger(classOf[Bootstrap])
 
     val outputBaseDir = option.outputDir
     val screenName = option.screenName
