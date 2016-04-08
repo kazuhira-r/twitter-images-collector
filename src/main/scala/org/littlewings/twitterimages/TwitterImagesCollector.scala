@@ -52,10 +52,10 @@ class TwitterImagesCollector(option: StartupOption, outputDirectory: String, rep
     val imageType = option.imageType
     val id = status.getId
     val time = formatter.format(status.getCreatedAt)
-    val mediaEntries = status.getMediaEntities
+    val extendedMediaEntries = status.getExtendedMediaEntities
 
-    mediaEntries.foreach { mediaEntry =>
-      val mediaUrl = s"${mediaEntry.getMediaURL}:${imageType}"
+    extendedMediaEntries.foreach { extendedMediaEntity =>
+      val mediaUrl = s"${extendedMediaEntity.getMediaURL}:${imageType}"
 
       try {
         httpClient.getInputStream(mediaUrl) { is =>
