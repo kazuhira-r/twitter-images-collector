@@ -39,14 +39,13 @@ object StartupOption {
       } text ("per page get count [default and max 200]")
 
       checkConfig { o =>
-        if (o.pagingEnd > 0 && o.pagingStart > o.pagingEnd) failure("invalid spec paging, start > end")
+        if (o.pagingEnd > 0 && o.pagingStart > o.pagingEnd) failure("invalid spec paging, start > end or end <= -1(unlimitted)")
         else success
       }
 
       checkConfig { o =>
         if (o.limit > 0 && o.limit <= 200) success
-        else if (o.limit < 0) success
-        else failure("limit is 0 < limit <= 200 or limit <= -1(unlimitted)")
+        else failure("limit is 0 < limit <= 200")
       }
 
       checkConfig { o =>
