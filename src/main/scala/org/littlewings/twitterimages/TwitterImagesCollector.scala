@@ -3,6 +3,7 @@ package org.littlewings.twitterimages
 import java.io.{BufferedInputStream, BufferedOutputStream, File, IOException}
 import java.nio.file.{Files, Paths}
 import java.text.{DateFormat, SimpleDateFormat}
+import java.util.{Calendar, GregorianCalendar}
 
 import org.slf4j.LoggerFactory
 import twitter4j.{Paging, Status, TwitterFactory}
@@ -54,13 +55,20 @@ class TwitterImagesCollector(option: StartupOption, outputDirectory: String, rep
     val time = formatter.format(status.getCreatedAt)
     val extendedMediaEntries = status.getExtendedMediaEntities
 
+    val calendar = new GregorianCalendar
+    calendar.setTime(status.getCreatedAt)
+    val year = calendar.get(Calendar.YEAR).toString
+    val yearDirectory = Array(outputDirectory, year).mkString(File.separator)
+
+    Files.createDirectories(Paths.get(yearDirectory))
+
     extendedMediaEntries.foreach { extendedMediaEntity =>
       val mediaUrl = s"${extendedMediaEntity.getMediaURL}:${imageType}"
 
       try {
         httpClient.getInputStream(mediaUrl) { is =>
           val fileName = UrlExtractor.fileNameExcludeType(mediaUrl)
-          val filePath = Array(outputDirectory, s"${time}_${id}_${fileName}").mkString(File.separator)
+          val filePath = Array(yearDirectory, s"${time}_${id}_${fileName}").mkString(File.separator)
 
           val bis = new BufferedInputStream(is)
           val bos = new BufferedOutputStream(Files.newOutputStream(Paths.get(filePath)))
