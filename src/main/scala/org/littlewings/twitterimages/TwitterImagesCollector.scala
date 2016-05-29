@@ -83,7 +83,7 @@ class TwitterImagesCollector(option: StartupOption, outputDirectory: String, rep
 
         reporter.incrementImage()
       } catch {
-        case e: IOException => logger.error("download fail, url = {}, reason = {}", Array(mediaUrl, e.getMessage, e))
+        case e: IOException => logger.error("download fail, time = {}, tweet-status-id = {}, media-url = {}, reason = {}", Array(time, id, mediaUrl, e.getMessage, e))
       }
     }
   }
