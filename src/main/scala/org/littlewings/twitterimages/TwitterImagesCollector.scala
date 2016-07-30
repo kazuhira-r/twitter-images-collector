@@ -39,7 +39,10 @@ class TwitterImagesCollector(option: StartupOption, outputDirectory: String, rep
       .foreach { responseList =>
         reporter.currentPage(currentPage)
 
-        logger.info(s"page[${currentPage}] size = ${responseList.size}")
+        val startDateTime = formatter.format(responseList.get(responseList.size - 1).getCreatedAt)
+        val endDateTime = formatter.format(responseList.get(0).getCreatedAt)
+
+        logger.info(s"page[${currentPage}] size = ${responseList.size}, tweet-range = ${startDateTime} - ${endDateTime}")
 
         responseList.asScala.foreach(handler)
 
