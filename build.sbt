@@ -15,7 +15,7 @@ mainClass in assembly := Some("org.littlewings.twitterimages.Bootstrap")
 
 libraryDependencies ++= Seq(
   "org.twitter4j" % "twitter4j-core" % "4.0.4",
-  "com.github.scopt" %% "scopt" % "3.4.0",
+  "com.github.scopt" %% "scopt" % "3.5.0",
   "com.squareup.okhttp3" % "okhttp" % "3.3.1",
   "org.slf4j" % "slf4j-api" % "1.7.21",
   "org.slf4j" % "slf4j-simple" % "1.7.21",
