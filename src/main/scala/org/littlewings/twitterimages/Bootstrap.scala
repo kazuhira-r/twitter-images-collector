@@ -30,7 +30,7 @@ object Bootstrap {
           |  paging-start = ${currentPage}
           |  paging-end = ${if (pagingEnd < 1) "unlimitted" else pagingEnd}
           |  limit = ${limit}
-          |  output-path-pattern = ${Array(outputBaseDir, "[screen-name]", "[image-type]", "[yyyy]", "[yyyyMMddHHmmss]_[id]_[image-filename]").mkString(File.separator)}
+          |  output-path-pattern = ${Array(outputBaseDir, screenName, imageType, "[yyyy]", "[yyyyMMddHHmmss]_[id]_[image-filename]").mkString(File.separator)}
           |""".stripMargin
     }
 
