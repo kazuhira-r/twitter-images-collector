@@ -56,7 +56,7 @@ class TwitterImagesCollector(option: StartupOption, outputDirectory: String, rep
     val imageType = option.imageType
     val id = status.getId
     val time = formatter.format(status.getCreatedAt)
-    val extendedMediaEntries = status.getExtendedMediaEntities
+    val mediaEntities = status.getMediaEntities
 
     val calendar = new GregorianCalendar
     calendar.setTime(status.getCreatedAt)
@@ -65,8 +65,8 @@ class TwitterImagesCollector(option: StartupOption, outputDirectory: String, rep
 
     Files.createDirectories(Paths.get(yearDirectory))
 
-    extendedMediaEntries.foreach { extendedMediaEntity =>
-      val mediaUrl = s"${extendedMediaEntity.getMediaURL}:${imageType}"
+    mediaEntities.foreach { mediaEntity =>
+      val mediaUrl = s"${mediaEntity.getMediaURL}:${imageType}"
 
       try {
         httpClient.getInputStream(mediaUrl) { is =>
