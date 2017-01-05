@@ -8,7 +8,7 @@ scalaVersion := "2.12.1"
 
 updateOptions := updateOptions.value.withCachedResolution(true)
 
-scalacOptions ++= Seq("-Xlint", "-deprecation", "-unchecked", "-feature", "-Xexperimental")
+scalacOptions ++= Seq("-Xlint", "-deprecation", "-unchecked", "-feature")
 
 assemblyJarName in assembly := "twitter-images-collector.jar"
 mainClass in assembly := Some("org.littlewings.twitterimages.Bootstrap")
