@@ -4,7 +4,7 @@ version := "0.1.0"
 
 organization := "org.littlewings"
 
-scalaVersion := "2.12.1"
+scalaVersion := "2.12.4"
 
 updateOptions := updateOptions.value.withCachedResolution(true)
 
