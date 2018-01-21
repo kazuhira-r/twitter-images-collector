@@ -19,5 +19,5 @@ libraryDependencies ++= Seq(
   "com.squareup.okhttp3" % "okhttp" % "3.9.1" % Compile,
   "org.slf4j" % "slf4j-api" % "1.7.25" % Compile,
   "org.slf4j" % "slf4j-simple" % "1.7.25" % Compile,
-  "org.scalatest" %% "scalatest" % "3.0.1" % Test
+  "org.scalatest" %% "scalatest" % "3.0.4" % Test
 )
